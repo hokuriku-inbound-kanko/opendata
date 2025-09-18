@@ -98,6 +98,149 @@ def convert_satisfaction_to_number(satisfaction_str):
     
     return satisfaction_mapping.get(satisfaction_str, satisfaction_str)
 
+def parse_purpose_flags(purpose_str):
+    """
+    目的の文字列を解析して、各フラグ項目に0または1を設定
+    """
+    # 目的の文字列を取得
+    purpose_text = purpose_str.strip() if purpose_str else ""
+    
+    # 各フラグ項目の定義
+    flags = {
+        "宿でのんびり過ごす": ["宿でのんびり過ごす"],
+        "温泉や露天風呂": ["温泉や露天風呂"],
+        "地元の美味しいものを食べる": ["地元の美味しいものを食べる"],
+        "花見や紅葉などの自然鑑賞": ["花見や紅葉などの自然鑑賞"],
+        "名所、旧跡の観光": ["名所、旧跡の観光"],
+        "テーマパーク（遊園地、動物園、博物館など）": ["テーマパーク（遊園地、動物園、博物館など）"],
+        "買い物、アウトレット": ["買い物、アウトレット"],
+        "お祭りやイベントへの参加・見物": ["お祭りやイベントへの参加・見物"],
+        "スポーツ観戦や芸能鑑賞（コンサート等）": ["スポーツ観戦や芸能鑑賞（コンサート等）"],
+        "アウトドア（海水浴、釣り、登山など）": ["アウトドア（海水浴、釣り、登山など）"],
+        "まちあるき、都市散策": ["まちあるき、都市散策"],
+        "各種体験（手作り、果物狩りなど）": ["各種体験（手作り、果物狩りなど）"],
+        "スキー・スノボ、マリンスポーツ": ["スキー・スノボ、マリンスポーツ"],
+        "その他スポーツ（ゴルフ、テニスなど）": ["その他スポーツ（ゴルフ、テニスなど）"],
+        "ドライブ・ツーリング": ["ドライブ・ツーリング"],
+        "友人・親戚を尋ねる": ["友人・親戚を尋ねる"],
+        "出張など仕事関係": ["出張など仕事関係"],
+        "その他の目的": ["その他"]
+    }
+    
+    # 各フラグをチェック
+    result = {}
+    
+    for flag_name, keywords in flags.items():
+        flag_value = 0
+        for keyword in keywords:
+            if keyword in purpose_text:
+                flag_value = 1
+                break
+        result[flag_name] = flag_value
+    
+    return result
+
+def parse_transport_flags(transport_str):
+    """
+    交通手段の文字列を解析して、各フラグ項目に0または1を設定
+    """
+    # 交通手段の文字列を取得
+    transport_text = transport_str.strip() if transport_str else ""
+    
+    # 各フラグ項目の定義
+    flags = {
+        "自家用車": ["自家用車"],
+        "レンタカー": ["レンタカー"],
+        "新幹線": ["新幹線"],
+        "在来線": ["在来線"],
+        "飛行機": ["飛行機"],
+        "旅行会社ツアーバス": ["旅行会社ツアーバス"],
+        "県外から訪れていない（福井県在住）": ["県外から訪れていない（福井県在住）"]
+    }
+    
+    # 各フラグをチェック
+    result = {}
+    
+    for flag_name, keywords in flags.items():
+        flag_value = 0
+        for keyword in keywords:
+            if keyword in transport_text:
+                flag_value = 1
+                break
+        result[flag_name] = flag_value
+    
+    return result
+
+def parse_transport2_flags(transport2_str):
+    """
+    交通手段2の文字列を解析して、各フラグ項目に0または1を設定
+    """
+    # 交通手段2の文字列を取得
+    transport2_text = transport2_str.strip() if transport2_str else ""
+    
+    # 各フラグ項目の定義
+    flags = {
+        "タクシー": ["タクシー"],
+        "路線バス": ["路線バス"],
+        "徒歩": ["徒歩"],
+        "レンタサイクル": ["レンタサイクル"]
+    }
+    
+    # 各フラグをチェック
+    result = {}
+    
+    for flag_name, keywords in flags.items():
+        flag_value = 0
+        for keyword in keywords:
+            if keyword in transport2_text:
+                flag_value = 1
+                break
+        result[flag_name] = flag_value
+    
+    return result
+
+def calculate_age_group(birth_year_str, survey_date_str):
+    """
+    生まれた年とアンケート回答日から年代を計算
+    """
+    if not birth_year_str or not survey_date_str:
+        return ""
+    
+    try:
+        # 生まれた年を整数に変換
+        birth_year = int(birth_year_str.strip())
+        
+        # アンケート回答日を解析（M/d/yyyy hh:mm:ss 形式）
+        survey_date = datetime.strptime(survey_date_str.strip(), '%m/%d/%Y %H:%M:%S')
+        survey_year = survey_date.year
+        
+        # 年齢を計算
+        age = survey_year - birth_year
+        
+        # 年代を判定
+        if age < 10:
+            return "10歳未満"
+        elif age < 20:
+            return "10代"
+        elif age < 30:
+            return "20代"
+        elif age < 40:
+            return "30代"
+        elif age < 50:
+            return "40代"
+        elif age < 60:
+            return "50代"
+        elif age < 70:
+            return "60代"
+        elif age < 80:
+            return "70代"
+        else:
+            return "80代以上"
+            
+    except (ValueError, TypeError):
+        # 解析に失敗した場合は元の値をそのまま返す
+        return birth_year_str
+
 def format_date_string(date_str):
     """
     日付文字列を yyyy/MM/dd hh:mm:ss 形式に統一
@@ -241,6 +384,42 @@ def convert_ishikawa_csv():
                     # 該当するフラグの値を設定
                     value = flags.get(header, 0)
                     output_row.append(value)
+                # 目的関連のフラグ項目の処理
+                elif header in ["宿でのんびり過ごす", "温泉や露天風呂", "地元の美味しいものを食べる",
+                               "花見や紅葉などの自然鑑賞", "名所、旧跡の観光", "テーマパーク（遊園地、動物園、博物館など）",
+                               "買い物、アウトレット", "お祭りやイベントへの参加・見物", "スポーツ観戦や芸能鑑賞（コンサート等）",
+                               "アウトドア（海水浴、釣り、登山など）", "まちあるき、都市散策", "各種体験（手作り、果物狩りなど）",
+                               "スキー・スノボ、マリンスポーツ", "その他スポーツ（ゴルフ、テニスなど）",
+                               "ドライブ・ツーリング", "友人・親戚を尋ねる", "出張など仕事関係", "その他の目的"]:
+                    # 目的の文字列を取得
+                    purpose_field = mapping["目的"]
+                    purpose_text = row.get(purpose_field, "") if purpose_field else ""
+                    # フラグをチェック
+                    flags = parse_purpose_flags(purpose_text)
+                    # 該当するフラグの値を設定
+                    value = flags.get(header, 0)
+                    output_row.append(value)
+                # 交通手段関連のフラグ項目の処理
+                elif header in ["自家用車", "レンタカー", "新幹線", "在来線", "飛行機", 
+                               "旅行会社ツアーバス", "県外から訪れていない（福井県在住）"]:
+                    # 交通手段の文字列を取得
+                    transport_field = mapping["交通手段１（目的地まで）"]
+                    transport_text = row.get(transport_field, "") if transport_field else ""
+                    # フラグをチェック
+                    flags = parse_transport_flags(transport_text)
+                    # 該当するフラグの値を設定
+                    value = flags.get(header, 0)
+                    output_row.append(value)
+                # 交通手段2関連のフラグ項目の処理
+                elif header in ["タクシー", "路線バス", "徒歩", "レンタサイクル"]:
+                    # 交通手段2の文字列を取得
+                    transport2_field = mapping["交通手段２（目的地から）"]
+                    transport2_text = row.get(transport2_field, "") if transport2_field else ""
+                    # フラグをチェック
+                    flags = parse_transport2_flags(transport2_text)
+                    # 該当するフラグの値を設定
+                    value = flags.get(header, 0)
+                    output_row.append(value)
                 # 満足度項目の処理
                 elif header in ["交通の満足度", 
                                "満足度（食べ物・料理）", "満足度（宿泊施設）", 
@@ -274,6 +453,13 @@ def convert_ishikawa_csv():
                         # 「アンケート回答日」の場合は日付形式を統一
                         if header == "アンケート回答日":
                             value = format_date_string(value)
+                        # 「年代」の場合は生まれた年から年代を計算
+                        elif header == "年代":
+                            # アンケート回答日を取得
+                            survey_date_field = mapping["アンケート回答日"]
+                            survey_date = row.get(survey_date_field, "") if survey_date_field else ""
+                            # 年代を計算
+                            value = calculate_age_group(value, survey_date)
                         
                         output_row.append(value)
                     else:

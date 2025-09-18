@@ -213,4 +213,16 @@ python convert_fukui.py
 
 ## ライセンス
 
-このプロジェクトはMITライセンスの下で公開されています。
+この観光アンケートデータ集約プログラムは以下の著作物を改変して利用しています。
+
+出典元
+
+- 富山県のデータについて： [富山県データ連携基盤CKAN 富山県観光ウェブアンケートデータ](https://ckan.tdcp.pref.toyama.jp/dataset/kanko_data)、富山県、クリエイティブ・コ
+モンズ・ライセンス・CCZero 表示（https://opendefinition.org/licenses/cc-zero/）
+
+- 石川県のデータについて： [いしかわ観光QRアンケートデータ-集約データ-表形式データ-全エリア](https://sites.google.com/view/milli-ishikawa-pref/data)、石川県、クリエイティブ・コ
+モンズ・ライセンス 表示 2.1（http://creativecommons.org/licenses/by/2.1/jp/）
+
+- 福井県のデータについて：[福井県観光データシステム「FTAS」により公開されたオープンデータ](https://github.com/code4fukui/fukui-kanko-survey)、福井県観光連盟、クリエイティブ・コ
+モンズ・ライセンス 表示（https://creativecommons.org/licenses/by/4.0/）
+
