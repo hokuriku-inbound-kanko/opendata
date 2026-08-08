@@ -358,6 +358,7 @@ def convert_ishikawa_csv():
         raise UnicodeDecodeError("すべてのエンコーディングでCSVファイルの読み込みに失敗しました")
     
     # 出力CSVを作成
+    os.makedirs(os.path.dirname(output_csv), exist_ok=True)
     with open(output_csv, 'w', encoding='utf-8', newline='') as f:
         writer = csv.writer(f)
         

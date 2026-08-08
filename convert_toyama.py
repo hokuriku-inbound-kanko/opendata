@@ -304,6 +304,7 @@ def convert_toyama_csv():
         rows = list(reader)
 
     # 出力CSVを作成
+    os.makedirs(os.path.dirname(output_csv), exist_ok=True)
     with open(output_csv, 'w', encoding='utf-8', newline='') as f:
         writer = csv.writer(f)
         
